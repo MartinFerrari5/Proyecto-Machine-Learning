@@ -4,6 +4,8 @@ from typing import Optional
 import pandas as pd
 import numpy as np
 from unidecode import unidecode
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity,linear_kernel
 import locale
 # locale.setlocale(locale.LC_ALL, 'es_ES.utf8')
 
@@ -16,29 +18,52 @@ app = FastAPI()
 movies_merged = pd.read_parquet("../datasets/movies_merged.parquet").head(5000)
 movies_merged_copy = movies_merged.copy()
 
+month_map={
+    "Enero":1,
+    "Febrero":2,
+    "Marzo":3,
+    "Abril":4,
+    "Mayo":5,
+    "Junio":6,
+    "Julio":7,
+    "Agosto":8,
+    "Septiembre":9,
+    "Ocutbre":10,
+    "Noviembre":  11,
+    "Diciembre":12
+}
+
 # Cantidad de peliculas por mes
 @app.post("/movies_month")
 def movies_per_month(mes:str):
+    mes = mes.capitalize()
+    num_mes = month_map[mes]
     try:
-        a = movies_merged_copy[movies_merged_copy["release_date"].dt.month_name(locale='es_ES.utf8') == mes.capitalize()]
-        return {"cantidad": int(a["title"].count())}
-    except (KeyError, AttributeError) as e:
-        return {"error": str(e)}
+        cant = movies_merged_copy[movies_merged_copy["release_date"].dt.month == num_mes]
+        return {"cantidad": int(cant["title"].count())}
+    except :
+        return {"error": "Check your input"}
     #     print("Check your input")
 
 # Cantidad peliculas por dias
-dias_norm = {
-    "Miã©rcoles":"Miercoles",
-    "Sã¡bado":"Sabado"
+dias={
+    "Lunes":0,
+    "Martes":1,
+    "Miercoles":2,
+    "Jueves":3,
+    "Viernes":4,
+    "Sabado":5,
+    "Domingo":6
+
 }
-dias = movies_merged_copy["release_date"].dt.day_name(locale='es_Es.utf8')
-dias= dias.replace(dias_norm)
 
 @app.post("/movies_day")
 def cantidad_filmaciones_dia(dia):
+    dia = unidecode(dia.title())
+    num_dia = dias[dia]
     try:
-        a = movies_merged_copy[dias== unidecode(dia).capitalize()]
-        return int(a["title"].count())
+        cantidad = movies_merged_copy[movies_merged_copy["release_date"].dt.day_of_week == num_dia]
+        return int(cantidad["title"].count())
     except:
         print("Check your input")
         
@@ -104,4 +129,60 @@ def get_director(nombre):
 
     
     return f"El director {nombre} consiguio un total de {round(cuenta_dinero_total,2)} mil dolares",peliculas_return
+
+
+
+# Sistema de recomendacion
+
+rec_system = pd.read_parquet("../datasets/rec_System.parquet").head(20000)
+rec_system_copy = rec_system.copy()
+
+rec_system_copy.fillna({"overview":"[]",
+                   "name_genre":"[]",
+                   "actors_names":"[]",
+                   "director_names":"[]",
+                   "tagline":"[]",
+                   "vote_average":rec_system["vote_average"].mean()},inplace=True)
+
+
+rec_system_copy["overview"] = rec_system_copy["overview"].apply(lambda x: x.split())
+rec_system_copy["tagline"] = rec_system_copy["tagline"].apply(lambda x: x.split())
+
+def collapse(valor):
+    valores =[]
+    for i in valor:
+       valores.append(i.replace(" ",""))
+    return valores
+
+
+rec_system_copy["name_genre"]=rec_system_copy["name_genre"].apply(collapse)
+rec_system_copy["actors_names"]=rec_system_copy["actors_names"].apply(collapse)
+rec_system_copy["director_names"]=rec_system_copy["director_names"].apply(collapse)
+rec_system_copy["tagline"]=rec_system_copy["tagline"].apply(collapse)
+
+rec_system_copy["tags"] = rec_system_copy["overview"] + rec_system_copy["name_genre"] + rec_system_copy["actors_names"] + rec_system_copy["director_names"] + rec_system_copy["tagline"] 
+
+rec_system_copy["tags"] = rec_system_copy["tags"].apply(lambda x: "".join(x))
+
+tv = TfidfVectorizer(max_features=5000, stop_words="english")
+vector = tv.fit_transform(rec_system_copy["tags"]).toarray()
+
+cosine_sim = linear_kernel(vector,vector)
+
+indices = pd.Series(rec_system_copy.index, index=rec_system_copy["title"]).drop_duplicates()
+
+# @app.post("/recomendacion")
+# def recomendacion(movie):
+#     movie = movie.lower()
+#     # index = indices[movie]
+#     # sim_scores=list(enumerate(cosine_sim[index]))
+#     # distances = sorted(sim_scores,reverse= True,key=lambda x: x[1])
+#     # lista=[]
+#     # for i in distances[1:10]:
+#     #     # print(i[0])
+#     #     lista.append(rec_system_copy.iloc[i[0]].title)
+
+#     return ""
+
+
     
