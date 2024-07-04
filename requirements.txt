@@ -1,6 +1,0 @@
-pandas
-numpy
-fastapi
-pydantic
-typing
-unidecode
