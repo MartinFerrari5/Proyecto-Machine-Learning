@@ -28,7 +28,7 @@ dias_norm = {
     "Miã©rcoles":"Miercoles",
     "Sã¡bado":"Sabado"
 }
-dias = movies_merged_copy["release_date"].dt.day_name(locale='es_Es.utf8')
+dias = movies_merged_copy["release_date"].dt.day_name(locale='es_Es.UTF8')
 dias= dias.replace(dias_norm)
 
 @app.post("/movies_day")
