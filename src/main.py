@@ -4,6 +4,8 @@ from typing import Optional
 import pandas as pd
 import numpy as np
 from unidecode import unidecode
+import locale
+print(locale.LC_ALL)
 
 #Inicializamos la app
 app = FastAPI()
@@ -17,7 +19,7 @@ movies_merged_copy = movies_merged.copy()
 @app.post("/movies_month")
 def movies_per_month(mes:str):
     try:
-        a = movies_merged_copy[movies_merged_copy["release_date"].dt.month_name(locale='es_ES.utf-8') == mes.capitalize()]
+        a = movies_merged_copy[movies_merged_copy["release_date"].dt.month_name(locale='es_ES.utf8') == mes.capitalize()]
         return {"cantidad": int(a["title"].count())}
     except (KeyError, AttributeError) as e:
         return {"error": str(e)}
@@ -28,7 +30,7 @@ dias_norm = {
     "Miã©rcoles":"Miercoles",
     "Sã¡bado":"Sabado"
 }
-dias = movies_merged_copy["release_date"].dt.day_name(locale='es_Es.utf-8')
+dias = movies_merged_copy["release_date"].dt.day_name(locale='es_Es.utf8')
 dias= dias.replace(dias_norm)
 
 @app.post("/movies_day")
