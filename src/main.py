@@ -17,7 +17,7 @@ movies_merged_copy = movies_merged.copy()
 @app.post("/movies_month")
 def movies_per_month(mes:str):
     try:
-        a = movies_merged_copy[movies_merged_copy["release_date"].dt.month_name(locale='es_ES.utf8') == mes.capitalize()]
+        a = movies_merged_copy[movies_merged_copy["release_date"].dt.month_name(locale='es_ES.UTF8') == mes.capitalize()]
         return {"cantidad": int(a["title"].count())}
     except (KeyError, AttributeError) as e:
         return {"error": str(e)}
