@@ -5,3 +5,4 @@ pydantic
 typing
 unidecode
 pyarrow
+uvicorn
