@@ -133,42 +133,42 @@ def get_director(nombre):
 
 # Sistema de recomendacion
 
-rec_system = pd.read_parquet("../datasets/rec_System.parquet").head(20000)
-rec_system_copy = rec_system.copy()
+# rec_system = pd.read_parquet("../datasets/rec_System.parquet").head(20000)
+# rec_system_copy = rec_system.copy()
 
-rec_system_copy.fillna({"overview":"[]",
-                   "name_genre":"[]",
-                   "actors_names":"[]",
-                   "director_names":"[]",
-                   "tagline":"[]",
-                   "vote_average":rec_system["vote_average"].mean()},inplace=True)
-
-
-rec_system_copy["overview"] = rec_system_copy["overview"].apply(lambda x: x.split())
-rec_system_copy["tagline"] = rec_system_copy["tagline"].apply(lambda x: x.split())
-
-def collapse(valor):
-    valores =[]
-    for i in valor:
-       valores.append(i.replace(" ",""))
-    return valores
+# rec_system_copy.fillna({"overview":"[]",
+#                    "name_genre":"[]",
+#                    "actors_names":"[]",
+#                    "director_names":"[]",
+#                    "tagline":"[]",
+#                    "vote_average":rec_system["vote_average"].mean()},inplace=True)
 
 
-rec_system_copy["name_genre"]=rec_system_copy["name_genre"].apply(collapse)
-rec_system_copy["actors_names"]=rec_system_copy["actors_names"].apply(collapse)
-rec_system_copy["director_names"]=rec_system_copy["director_names"].apply(collapse)
-rec_system_copy["tagline"]=rec_system_copy["tagline"].apply(collapse)
+# rec_system_copy["overview"] = rec_system_copy["overview"].apply(lambda x: x.split())
+# rec_system_copy["tagline"] = rec_system_copy["tagline"].apply(lambda x: x.split())
 
-rec_system_copy["tags"] = rec_system_copy["overview"] + rec_system_copy["name_genre"] + rec_system_copy["actors_names"] + rec_system_copy["director_names"] + rec_system_copy["tagline"] 
+# def collapse(valor):
+#     valores =[]
+#     for i in valor:
+#        valores.append(i.replace(" ",""))
+#     return valores
 
-rec_system_copy["tags"] = rec_system_copy["tags"].apply(lambda x: "".join(x))
 
-tv = TfidfVectorizer(max_features=5000, stop_words="english")
-vector = tv.fit_transform(rec_system_copy["tags"]).toarray()
+# rec_system_copy["name_genre"]=rec_system_copy["name_genre"].apply(collapse)
+# rec_system_copy["actors_names"]=rec_system_copy["actors_names"].apply(collapse)
+# rec_system_copy["director_names"]=rec_system_copy["director_names"].apply(collapse)
+# rec_system_copy["tagline"]=rec_system_copy["tagline"].apply(collapse)
 
-cosine_sim = linear_kernel(vector,vector)
+# rec_system_copy["tags"] = rec_system_copy["overview"] + rec_system_copy["name_genre"] + rec_system_copy["actors_names"] + rec_system_copy["director_names"] + rec_system_copy["tagline"] 
 
-indices = pd.Series(rec_system_copy.index, index=rec_system_copy["title"]).drop_duplicates()
+# rec_system_copy["tags"] = rec_system_copy["tags"].apply(lambda x: "".join(x))
+
+# tv = TfidfVectorizer(max_features=5000, stop_words="english")
+# vector = tv.fit_transform(rec_system_copy["tags"]).toarray()
+
+# cosine_sim = linear_kernel(vector,vector)
+
+# indices = pd.Series(rec_system_copy.index, index=rec_system_copy["title"]).drop_duplicates()
 
 # @app.post("/recomendacion")
 # def recomendacion(movie):
