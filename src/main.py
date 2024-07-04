@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 from unidecode import unidecode
 import locale
-print(locale.LC_ALL)
+locale.setlocale(locale.LC_ALL, 'es_ES.utf8')
 
 #Inicializamos la app
 app = FastAPI()
