@@ -4,10 +4,9 @@ from typing import Optional
 import pandas as pd
 import numpy as np
 from unidecode import unidecode
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity,linear_kernel
-import locale
-# locale.setlocale(locale.LC_ALL, 'es_ES.utf8')
+# from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+# from sklearn.metrics.pairwise import cosine_similarity,linear_kernel
+
 
 
 #Inicializamos la app
