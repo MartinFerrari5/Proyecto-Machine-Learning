@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 from unidecode import unidecode
 import locale
-locale.setlocale(locale.LC_ALL, 'es_ES.utf8')
+# locale.setlocale(locale.LC_ALL, 'es_ES.utf8')
 
 
 #Inicializamos la app
