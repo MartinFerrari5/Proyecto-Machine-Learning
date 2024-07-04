@@ -4,3 +4,4 @@ fastapi
 pydantic
 typing
 unidecode
+pyarrow
