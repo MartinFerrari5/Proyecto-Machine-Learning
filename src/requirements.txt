@@ -6,4 +6,4 @@ typing
 unidecode
 pyarrow
 uvicorn
-sklearn
+scikit-learn
