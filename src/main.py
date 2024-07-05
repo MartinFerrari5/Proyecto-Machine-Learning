@@ -4,8 +4,8 @@ from typing import Optional
 import pandas as pd
 import numpy as np
 from unidecode import unidecode
-# from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
-# from sklearn.metrics.pairwise import cosine_similarity,linear_kernel
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity,linear_kernel
 
 
 
@@ -14,7 +14,7 @@ app = FastAPI()
 
 # Lectura del DataFrame
 
-movies_merged = pd.read_parquet("../datasets/movies_merged.parquet").head(5000)
+movies_merged = pd.read_parquet("../datasets/movies_merged.parquet").head(30000)
 movies_merged_copy = movies_merged.copy()
 
 month_map={
@@ -69,17 +69,18 @@ def cantidad_filmaciones_dia(dia):
 
 #Popularidad de la pelicula
 @app.post("/movie_popularity")
-def popularidad_titulo (titulo):
-    titulo=titulo.lower()
+def popularidad_titulo (titulo:str):
+    titulo=titulo.title()
     df_title = movies_merged_copy[movies_merged_copy["title"]==titulo]
-    popularity = list(df_title["popularity"])[0]
+    popularity = list(df_title["vote_average"])[0]
+    print(df_title)
     return f"""La película {titulo} fue estrenada en el año {int(list(df_title["release_year"])[0])} cuenta con una popularidad de {popularity}"""
 
 
 # Valoracion de la pelicula
 @app.post("/movie_votes")
 def votos_titulo (titulo:str):
-    titulo=titulo.lower()
+    titulo=titulo.title()
     df_title = movies_merged_copy[movies_merged_copy["title"]==titulo]
     cant_votos = list(df_title["vote_count"])[0]
     if(cant_votos<2000): 
@@ -88,7 +89,7 @@ def votos_titulo (titulo:str):
     
 
 @app.post("/get_actor")
-def get_actor(nombre):
+def get_actor(nombre:str):
     nombre = nombre.title()
     cuenta_movies = 0
     cuenta_dinero = 0
@@ -133,55 +134,59 @@ def get_director(nombre):
 
 # Sistema de recomendacion
 
-# rec_system = pd.read_parquet("../datasets/rec_System.parquet").head(20000)
-# rec_system_copy = rec_system.copy()
+rec_system = pd.read_parquet("../datasets/rec_System.parquet").head(20000)
+rec_system_copy = rec_system.copy()
 
-# rec_system_copy.fillna({"overview":"[]",
-#                    "name_genre":"[]",
-#                    "actors_names":"[]",
-#                    "director_names":"[]",
-#                    "tagline":"[]",
-#                    "vote_average":rec_system["vote_average"].mean()},inplace=True)
+rec_system_copy.fillna({"overview":"[]",
+                   "name_genre":"[]",
+                   "actors_names":"[]",
+                   "director_names":"[]",
+                   "tagline":"[]",
+                   "company":"[]",
+                   },inplace=True)
 
 
 # rec_system_copy["overview"] = rec_system_copy["overview"].apply(lambda x: x.split())
 # rec_system_copy["tagline"] = rec_system_copy["tagline"].apply(lambda x: x.split())
 
-# def collapse(valor):
-#     valores =[]
-#     for i in valor:
-#        valores.append(i.replace(" ",""))
-#     return valores
+def collapse(valor):
+    valores =[]
+    for i in valor:
+       valores.append(i)
+    return valores
 
 
-# rec_system_copy["name_genre"]=rec_system_copy["name_genre"].apply(collapse)
+rec_system_copy["company"]=rec_system_copy["company"].apply(collapse)
+rec_system_copy["name_genre"]=rec_system_copy["name_genre"].apply(collapse)
 # rec_system_copy["actors_names"]=rec_system_copy["actors_names"].apply(collapse)
 # rec_system_copy["director_names"]=rec_system_copy["director_names"].apply(collapse)
-# rec_system_copy["tagline"]=rec_system_copy["tagline"].apply(collapse)
 
-# rec_system_copy["tags"] = rec_system_copy["overview"] + rec_system_copy["name_genre"] + rec_system_copy["actors_names"] + rec_system_copy["director_names"] + rec_system_copy["tagline"] 
+rec_system_copy["name_genre"] = rec_system_copy["name_genre"].apply(lambda x: ",".join(x))
+rec_system_copy["company"] = rec_system_copy["company"].apply(lambda x: ",".join(x))
 
-# rec_system_copy["tags"] = rec_system_copy["tags"].apply(lambda x: "".join(x))
+rec_system_copy["tags"] = rec_system_copy["overview"] + " " + rec_system_copy["name_genre"]  + " " + rec_system_copy["tagline"] + rec_system_copy["company"] + rec_system_copy["collection"]       #+ rec_system_copy["actors_names"] + rec_system_copy["director_names"]  
 
-# tv = TfidfVectorizer(max_features=5000, stop_words="english")
-# vector = tv.fit_transform(rec_system_copy["tags"]).toarray()
+rec_system_copy["tags"] = rec_system_copy["tags"].apply(lambda x: "".join(x))
 
-# cosine_sim = linear_kernel(vector,vector)
+tv = TfidfVectorizer(max_features=5000, stop_words="english")
+vector = tv.fit_transform(rec_system_copy["tags"]).toarray()
 
-# indices = pd.Series(rec_system_copy.index, index=rec_system_copy["title"]).drop_duplicates()
+cosine_sim = linear_kernel(vector,vector)
 
-# @app.post("/recomendacion")
-# def recomendacion(movie):
-#     movie = movie.lower()
-#     # index = indices[movie]
-#     # sim_scores=list(enumerate(cosine_sim[index]))
-#     # distances = sorted(sim_scores,reverse= True,key=lambda x: x[1])
-#     # lista=[]
-#     # for i in distances[1:10]:
-#     #     # print(i[0])
-#     #     lista.append(rec_system_copy.iloc[i[0]].title)
+indices = pd.Series(rec_system_copy.index, index=rec_system_copy["title"]).drop_duplicates()
 
-#     return ""
+@app.post("/recomendacion")
+def recomendacion(movie:str):
+    movie = movie.title()
+    index = indices[movie]
+    sim_scores=list(enumerate(cosine_sim[index]))
+    distances = sorted(sim_scores,reverse= True,key=lambda x: x[1])
+    lista=[]
+    for i in distances[1:6]:
+        # print(i[0])
+        lista.append(rec_system_copy.iloc[i[0]].title)
+
+    return lista
 
 
     
