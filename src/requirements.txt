@@ -6,3 +6,4 @@ typing
 unidecode
 pyarrow
 uvicorn
+sklearn
