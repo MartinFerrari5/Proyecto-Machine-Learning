@@ -134,7 +134,7 @@ def get_director(nombre):
 
 # Sistema de recomendacion
 
-rec_system = pd.read_parquet("../datasets/rec_System.parquet").head(20000)
+rec_system = pd.read_parquet("../datasets/rec_system.parquet").head(20000)
 rec_system_copy = rec_system.copy()
 
 rec_system_copy.fillna({"overview":"[]",
