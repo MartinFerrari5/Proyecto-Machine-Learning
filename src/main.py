@@ -14,7 +14,7 @@ app = FastAPI()
 
 # Lectura del DataFrame
 
-movies_merged = pd.read_parquet("../datasets/movies_merged.parquet").head(30000)
+movies_merged = pd.read_parquet("../datasets/movies_merged.parquet").head(20000)
 movies_merged_copy = movies_merged.copy()
 
 month_map={
