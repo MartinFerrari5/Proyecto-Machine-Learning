@@ -14,7 +14,7 @@ app = FastAPI()
 
 # Lectura del DataFrame
 
-movies_merged = pd.read_parquet("../datasets/movies_merged.parquet").head(10000)
+movies_merged = pd.read_parquet("../datasets/movies_merged.parquet").head(5000)
 movies_merged_copy = movies_merged.copy()
 
 month_map={
@@ -134,7 +134,7 @@ def get_director(nombre):
 
 # Sistema de recomendacion
 
-rec_system = pd.read_parquet("../datasets/rec_system.parquet").head(5000)
+rec_system = pd.read_parquet("../datasets/rec_system.parquet").head(3000)
 rec_system_copy = rec_system.copy()
 
 rec_system_copy.fillna({"overview":"[Unknown]",
