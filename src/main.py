@@ -14,7 +14,7 @@ app = FastAPI()
 
 # Lectura del DataFrame
 
-movies_merged = pd.read_parquet("../datasets/movies_merged.parquet").head(1000)
+movies_merged = pd.read_parquet("../datasets/movies_merged.parquet").head(10000)
 movies_merged_copy = movies_merged.copy()
 
 month_map={
@@ -70,22 +70,22 @@ def cantidad_filmaciones_dia(dia):
 #Popularidad de la pelicula
 @app.post("/movie_popularity")
 def popularidad_titulo (titulo:str):
-    titulo=titulo.title()
+    titulo=titulo.lower()
     df_title = movies_merged_copy[movies_merged_copy["title"]==titulo]
     popularity = list(df_title["vote_average"])[0]
     print(df_title)
-    return f"""La película {titulo} fue estrenada en el año {int(list(df_title["release_year"])[0])} cuenta con una popularidad de {popularity}"""
+    return f"""La película {titulo.title()} fue estrenada en el año {int(list(df_title["release_year"])[0])} cuenta con una popularidad de {popularity}"""
 
 
 # Valoracion de la pelicula
 @app.post("/movie_votes")
 def votos_titulo (titulo:str):
-    titulo=titulo.title()
+    titulo=titulo.lower()
     df_title = movies_merged_copy[movies_merged_copy["title"]==titulo]
     cant_votos = list(df_title["vote_count"])[0]
     if(cant_votos<2000): 
-        return print(f"Lo siento, {titulo} cuenta solo con {cant_votos}, debes elegir una pelicula con almenos 2000")
-    return f"""La película {titulo} fue estrenada en el año {int(list(df_title["release_year"])[0])} La misma cuenta con un total de {cant_votos} valoraciones, con un promedio de {list(df_title["vote_average"])[0]}"""
+        return print(f"Lo siento, {titulo.title()} cuenta solo con {cant_votos}, debes elegir una pelicula con almenos 2000")
+    return f"""La película {titulo.title()} fue estrenada en el año {int(list(df_title["release_year"])[0])} La misma cuenta con un total de {cant_votos} valoraciones, con un promedio de {list(df_title["vote_average"])[0]}"""
     
 
 @app.post("/get_actor")
@@ -107,7 +107,7 @@ def get_actor(nombre:str):
 
 @app.post("/get_director")
 def get_director(nombre):
-    movies_merged_copy["director_names"].fillna("[]",inplace=True)
+    movies_merged_copy["director_names"].fillna("Unknown",inplace=True)
     nombre = nombre.title()
     peliculas_return = {}
     cuenta_dinero_total = 0
@@ -115,7 +115,7 @@ def get_director(nombre):
 
         if(isinstance(nombres,object) and nombre in nombres):
 
-            movie_title= movies_merged_copy["title"].str.capitalize().iloc[i]
+            movie_title= movies_merged_copy["title"].str.title().iloc[i]
             individual_return = movies_merged_copy["return"].iloc[i]
             release_year = movies_merged_copy["release_year"].iloc[i]
             budget = movies_merged_copy["budget"].iloc[i]
@@ -126,7 +126,7 @@ def get_director(nombre):
                                             "costo":budget,
                                             "revenue":revenue}
             cuenta_dinero_total += movies_merged_copy["return"].iloc[i]
-
+    print(peliculas_return)
     
     return f"El director {nombre} consiguio un total de {round(cuenta_dinero_total,2)} mil dolares",peliculas_return
 
@@ -134,15 +134,15 @@ def get_director(nombre):
 
 # Sistema de recomendacion
 
-rec_system = pd.read_parquet("../datasets/rec_system.parquet").head(1000)
+rec_system = pd.read_parquet("../datasets/rec_system.parquet").head(5000)
 rec_system_copy = rec_system.copy()
 
-rec_system_copy.fillna({"overview":"[]",
-                   "name_genre":"[]",
-                   "actors_names":"[]",
-                   "director_names":"[]",
-                   "tagline":"[]",
-                   "company":"[]",
+rec_system_copy.fillna({"overview":"[Unknown]",
+                   "name_genre":"[Unknown]",
+                   "actors_names":"[Unknown]",
+                   "director_names":"[Unknown]",
+                   "tagline":"[Unknown]",
+                   "company":"[Unknown]",
                    },inplace=True)
 
 
@@ -164,7 +164,7 @@ rec_system_copy["name_genre"]=rec_system_copy["name_genre"].apply(collapse)
 rec_system_copy["name_genre"] = rec_system_copy["name_genre"].apply(lambda x: ",".join(x))
 rec_system_copy["company"] = rec_system_copy["company"].apply(lambda x: ",".join(x))
 
-rec_system_copy["tags"] = rec_system_copy["overview"] + " " + rec_system_copy["name_genre"]  + " " + rec_system_copy["tagline"] + rec_system_copy["company"] + rec_system_copy["collection"]       #+ rec_system_copy["actors_names"] + rec_system_copy["director_names"]  
+rec_system_copy["tags"] =  rec_system_copy["name_genre"]  + " " + rec_system_copy["tagline"] + rec_system_copy["company"] + " " + rec_system_copy["collection"]       #+ rec_system_copy["actors_names"] + rec_system_copy["director_names"]  
 
 rec_system_copy["tags"] = rec_system_copy["tags"].apply(lambda x: "".join(x))
 
@@ -177,14 +177,15 @@ indices = pd.Series(rec_system_copy.index, index=rec_system_copy["title"]).drop_
 
 @app.post("/recomendacion")
 def recomendacion(movie:str):
-    movie = movie.title()
+    movie = movie.lower()
     index = indices[movie]
     sim_scores=list(enumerate(cosine_sim[index]))
     distances = sorted(sim_scores,reverse= True,key=lambda x: x[1])
     lista=[]
     for i in distances[1:6]:
         # print(i[0])
-        lista.append(rec_system_copy.iloc[i[0]].title)
+        titulo = rec_system_copy.iloc[i[0]].title
+        lista.append(titulo.title())
 
     return lista
 
