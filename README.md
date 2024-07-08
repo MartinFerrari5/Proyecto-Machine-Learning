@@ -5,19 +5,22 @@
 1. [Introducción](#introducción)
 2. [Requisitos](#requisitos)
 3. [Estructura del Proyecto](#estructura-del-proyecto)
-4. [Uso y Ejecución](#uso-y-ejecución)
+4. [Instrucciones de Ejecucion](#instrucciones-de-ejecucion)
 5. [Datos y Fuentes](#datos-y-fuentes)
 6. [Metodología](#metodología)
 7. [Resultados y Conclusiones](#resultados-y-conclusiones)
 8. [Contribución y Colaboración](#contribución-y-colaboración)
-9. [Licencia](#licencia)
+9. [Datasets](#licencia)
+10. [Autor](#autor) 
 
-<hb>
 
 ### Introduccion 
+<HR>
+
 <p style="border-left:5px solid rgba(150, 150, 105, 0.1);padding:5px;font-size:15px">Bienvenidos a todos a mi primer proyecto de machine learning. En esta oportunidad, el objetivo es crear una <i>API</i> con ciertas funciones que den respuesta a ciertos inputs del usuario. Un ejemplo: la cantidad de peliculas realizadas en un mes en especifico. Durante este proceso se ha realizado un ETL para asi poder trabajar con datos limpios y luego se realizo un EDA para poder analizar en profundidad el comportamiento de nuestro dataset. Luego, se construyo el sistema de recomendacion utilizando machine learning </p>
 
 ### Requisitos
+<hr>
 <p>Para el entendimiento y ejecucion del siguiente proceso se require conocimiento en las siguientes areas:</p>
 
 1) Python
@@ -26,16 +29,56 @@
 4) Scikit-Learn
 
 
-<p>Descargar los datasets del siguiente enlace <a href="https://drive.google.com/drive/folders/1VuwQ5M1JQ_VugOIa7mo8ET66eOhLpjsQ?usp=sharing"> Datasets</a></p>
-
-
 ### Estructura del proyecto:
-`data/`: Esta carpeta contiene los datasets utilizados.
-`notebooks`: Contiene los archivos `.ipynb` en los cuales se realizo el <i>ETL</i> y el <i>EDA</i>.
-`src`: Contiene los archivos necesarios para que la <i>API</i> funcione.
-`README.md`: Documentacion del presente proyecto.
+<hr>
+
+`data/`: Esta carpeta contiene los datasets utilizados. <br>
+`notebooks/`: Contiene los archivos `.ipynb` en los cuales se realizo el <i>ETL</i> y el <i>EDA</i>.<br>
+`src/`: Contiene los archivos necesarios para que la <i>API</i> funcione.<br>
+`README.md`: Documentacion del presente proyecto.<br>
 
 
-###
+
+### Instrucciones de Ejecucion
+<hr>
+
+1) Como primera instancia se clonara el repositorio.
+```
+git clone https://github.com/MartinFerrari5/first_project.git
+```
+- Como recomendacion, utiliza un entorno virtual:
+```
+#Creacion entorno virtual
+    python -m venv nombre-entorno
+```
+* Activacion:
+    - Windows: `venv\Scripts\activate`
+    - Mac/Linux: `venv/bin/activate`
+
+2) Dirigite a la carpeta de `/notebooks` donde encontraras el archivo `etl.ipynb`, dentro de este, encontraras todo el proceso de limpieza y tranformacion realizado a los dataset en su formato original. Al final del presente <b>README</b> se encuentra el link para que los puedas descargar.
+
+3) Una vez ejecutado el paso n°2, dirigete al archivo `eda.ipynb` en el cual encontraras el analisis exploratorio de los datos. Se presenta un estudio con graficos de los datos ya limpios
+
+4) Haciendo uso de la terminal que gustes, inicia la <i>API</i>.
+
+```
+# Dirigete a la carpeta src 
+cd src
+
+# Corre el siguiente codigo
+uvicorn main:app --reload
+
+```
+5) <p>Una vez la <i>API</i> este corriendo, ingresa a la url que FastAPI te provee, y pruebala &#128513;</p>
+
+### Datasets
+<hr>
+
+Al contar con un peso significante, los datasets utilizados en formato `.csv` se encuentran en el siguiente link para su descarga. <b><a href="https://drive.google.com/drive/u/0/folders/1VuwQ5M1JQ_VugOIa7mo8ET66eOhLpjsQ">Link Datasets</a></b>
+
+### Autor
+<hr>
+
+Este proyecto fue realizado por Martin Ferrari. Muchas gracias a todos por leer, no dudes en contactarme a mi <a href="https://www.linkedin.com/in/martin-ferrari-bb0547219/">LinkedIn</a> por cualquier duda
 
 
