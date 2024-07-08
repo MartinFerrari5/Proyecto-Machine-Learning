@@ -36,8 +36,8 @@ month_map={
 @app.post("/movies_month")
 def movies_per_month(mes:str):
     mes = mes.capitalize()
-    num_mes = month_map[mes]
     try:
+        num_mes = month_map[mes]
         cant = movies_merged_copy[movies_merged_copy["release_date"].dt.month == num_mes]
         return {"cantidad": int(cant["title"].count())}
     except :
@@ -59,33 +59,39 @@ dias={
 @app.post("/movies_day")
 def cantidad_filmaciones_dia(dia):
     dia = unidecode(dia.title())
-    num_dia = dias[dia]
     try:
+        num_dia = dias[dia]
         cantidad = movies_merged_copy[movies_merged_copy["release_date"].dt.day_of_week == num_dia]
         return int(cantidad["title"].count())
     except:
-        print("Check your input")
+        return "Check your input"
         
 
 #Popularidad de la pelicula
 @app.post("/movie_popularity")
 def popularidad_titulo (titulo:str):
     titulo=titulo.lower()
-    df_title = movies_merged_copy[movies_merged_copy["title"]==titulo]
-    popularity = list(df_title["vote_average"])[0]
-    print(df_title)
-    return f"""La película {titulo.title()} fue estrenada en el año {int(list(df_title["release_year"])[0])} cuenta con una popularidad de {popularity}"""
+    try:
+        df_title = movies_merged_copy[movies_merged_copy["title"]==titulo]
+        popularity = list(df_title["vote_average"])[0]
+        print(df_title)
+        return f"""La película {titulo.title()} fue estrenada en el año {int(list(df_title["release_year"])[0])} cuenta con una popularidad de {popularity}"""
+    except:
+        return f"La pelicuoa {titulo} no se encuentra en la base de datos"
 
 
 # Valoracion de la pelicula
 @app.post("/movie_votes")
 def votos_titulo (titulo:str):
     titulo=titulo.lower()
-    df_title = movies_merged_copy[movies_merged_copy["title"]==titulo]
-    cant_votos = list(df_title["vote_count"])[0]
-    if(cant_votos<2000): 
-        return print(f"Lo siento, {titulo.title()} cuenta solo con {cant_votos}, debes elegir una pelicula con almenos 2000")
-    return f"""La película {titulo.title()} fue estrenada en el año {int(list(df_title["release_year"])[0])} La misma cuenta con un total de {cant_votos} valoraciones, con un promedio de {list(df_title["vote_average"])[0]}"""
+    try:
+        df_title = movies_merged_copy[movies_merged_copy["title"]==titulo]
+        cant_votos = list(df_title["vote_count"])[0]
+        if(cant_votos<2000): 
+            return print(f"Lo siento, {titulo.title()} cuenta solo con {cant_votos}, debes elegir una pelicula con almenos 2000")
+        return f"""La película {titulo.title()} fue estrenada en el año {int(list(df_title["release_year"])[0])} La misma cuenta con un total de {cant_votos} valoraciones, con un promedio de {list(df_title["vote_average"])[0]}"""
+    except:
+        f"La pelicula {titulo} no se encuentra en la base de datos"
     
 
 @app.post("/get_actor")
@@ -93,42 +99,48 @@ def get_actor(nombre:str):
     nombre = nombre.title()
     cuenta_movies = 0
     cuenta_dinero = 0
-    for nombres,i in zip(movies_merged_copy["actors_names"],range(movies_merged_copy.shape[0])):
-        # if(type(nombres) in [float,int] ): continue
-        if(isinstance(nombres,np.ndarray) and nombre in nombres and nombre not in movies_merged_copy["director_names"][i]):
-            cuenta_movies +=1
-            cuenta_dinero += movies_merged_copy["return"].iloc[i]
-    promedio = cuenta_movies/cuenta_dinero
-    return f"El actor {nombre} participo en {cuenta_movies} peliculas, solo como actor, consiguiendo un total de {round(cuenta_dinero,2)} mil dolares, con un promedio de {round(promedio,2)} mil dolares por pelicula"
+    try:
+        for nombres,i in zip(movies_merged_copy["actors_names"],range(movies_merged_copy.shape[0])):
+            # if(type(nombres) in [float,int] ): continue
+            if(isinstance(nombres,np.ndarray) and nombre in nombres and nombre not in movies_merged_copy["director_names"][i]):
+                cuenta_movies +=1
+                cuenta_dinero += movies_merged_copy["return"].iloc[i]
+        promedio = cuenta_movies/cuenta_dinero
+        return f"El actor {nombre} participo en {cuenta_movies} peliculas, solo como actor, consiguiendo un total de {round(cuenta_dinero,2)} mil dolares, con un promedio de {round(promedio,2)} mil dolares por pelicula"
+    except:
+        return f"{nombre} no se encuentra en la base de datos"
     
 
 
 # Certificamps que todos los datos de la columna tengan datos
+movies_merged_copy["director_names"].fillna("Unknown",inplace=True)
 
 @app.post("/get_director")
 def get_director(nombre):
-    movies_merged_copy["director_names"].fillna("Unknown",inplace=True)
     nombre = nombre.title()
     peliculas_return = {}
     cuenta_dinero_total = 0
-    for nombres,i in zip(movies_merged_copy["director_names"],range(movies_merged_copy.shape[0])):
+    try:
+        for nombres,i in zip(movies_merged_copy["director_names"],range(movies_merged_copy.shape[0])):
 
-        if(isinstance(nombres,object) and nombre in nombres):
+            if(isinstance(nombres,object) and nombre in nombres):
 
-            movie_title= movies_merged_copy["title"].str.title().iloc[i]
-            individual_return = movies_merged_copy["return"].iloc[i]
-            release_year = movies_merged_copy["release_year"].iloc[i]
-            budget = movies_merged_copy["budget"].iloc[i]
-            revenue = movies_merged_copy["revenue"].iloc[i]
+                movie_title= movies_merged_copy["title"].str.title().iloc[i]
+                individual_return = movies_merged_copy["return"].iloc[i]
+                release_year = movies_merged_copy["release_year"].iloc[i]
+                budget = movies_merged_copy["budget"].iloc[i]
+                revenue = movies_merged_copy["revenue"].iloc[i]
 
-            peliculas_return[movie_title] = {"retorno": round(individual_return,2),
-                                            "año_lanzamiento": int(release_year),
-                                            "costo":budget,
-                                            "revenue":revenue}
-            cuenta_dinero_total += movies_merged_copy["return"].iloc[i]
-    print(peliculas_return)
-    
-    return f"El director {nombre} consiguio un total de {round(cuenta_dinero_total,2)} mil dolares",peliculas_return
+                peliculas_return[movie_title] = {"retorno": round(individual_return,2),
+                                                "año_lanzamiento": int(release_year),
+                                                "costo":budget,
+                                                "revenue":revenue}
+                cuenta_dinero_total += movies_merged_copy["return"].iloc[i]
+        print(peliculas_return)
+        
+        return f"El director {nombre} consiguio un total de {round(cuenta_dinero_total,2)} mil dolares",peliculas_return
+    except:
+        return f"{nombre} no se encuentra en la base de datos"
 
 
 
@@ -178,16 +190,19 @@ indices = pd.Series(rec_system_copy.index, index=rec_system_copy["title"]).drop_
 @app.post("/recomendacion")
 def recomendacion(movie:str):
     movie = movie.lower()
-    index = indices[movie]
-    sim_scores=list(enumerate(cosine_sim[index]))
-    distances = sorted(sim_scores,reverse= True,key=lambda x: x[1])
-    lista=[]
-    for i in distances[1:6]:
-        # print(i[0])
-        titulo = rec_system_copy.iloc[i[0]].title
-        lista.append(titulo.title())
+    try:
+        index = indices[movie]
+        sim_scores=list(enumerate(cosine_sim[index]))
+        distances = sorted(sim_scores,reverse= True,key=lambda x: x[1])
+        lista=[]
+        for i in distances[1:6]:
+            # print(i[0])
+            titulo = rec_system_copy.iloc[i[0]].title
+            lista.append(titulo.title())
 
-    return lista
+        return lista
+    except: 
+        f"La pelicula {movie} no se encuentra en la base de datos"
 
 
     
