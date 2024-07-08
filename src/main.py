@@ -33,13 +33,14 @@ month_map={
 }
 
 # Cantidad de peliculas por mes
-@app.post("/movies_month")
-def movies_per_month(mes:str):
+@app.post("/cantidad_filmaciones_mes")
+def cantidad_filmaciones_mes(mes:str):
     mes = mes.capitalize()
     try:
         num_mes = month_map[mes]
         cant = movies_merged_copy[movies_merged_copy["release_date"].dt.month == num_mes]
-        return {"cantidad": int(cant["title"].count())}
+        return {"mes": mes
+            ,"cantidad": int(cant["title"].count())}
     except :
         return {"error": "Check your input"}
     #     print("Check your input")
@@ -56,39 +57,42 @@ dias={
 
 }
 
-@app.post("/movies_day")
+@app.post("/cantidad_filmaciones_dia")
 def cantidad_filmaciones_dia(dia):
     dia = unidecode(dia.title())
     try:
         num_dia = dias[dia]
         cantidad = movies_merged_copy[movies_merged_copy["release_date"].dt.day_of_week == num_dia]
-        return int(cantidad["title"].count())
+        return {"dia": dia 
+            ,"cantidad": int(cantidad["title"].count())}
     except:
         return "Check your input"
         
 
 #Popularidad de la pelicula
-@app.post("/movie_popularity")
-def popularidad_titulo (titulo:str):
+@app.post("/score_titulo")
+def score_titulo (titulo:str):
     titulo=titulo.lower()
     try:
         df_title = movies_merged_copy[movies_merged_copy["title"]==titulo]
         popularity = list(df_title["vote_average"])[0]
         print(df_title)
-        return f"""La película {titulo.title()} fue estrenada en el año {int(list(df_title["release_year"])[0])} cuenta con una popularidad de {popularity}"""
+        return f"""La película {titulo.title()} fue estrenada en el año {int(list(df_title["release_year"])[0])} cuenta con una score de {popularity}/10"""
     except:
         return f"La pelicuoa {titulo} no se encuentra en la base de datos"
 
 
 # Valoracion de la pelicula
-@app.post("/movie_votes")
+@app.post("/votos_titulo")
 def votos_titulo (titulo:str):
     titulo=titulo.lower()
     try:
         df_title = movies_merged_copy[movies_merged_copy["title"]==titulo]
+        if(df_title.shape[0]==0):
+            return f"La pelicula {titulo} no se encuentra en la base de datos"
         cant_votos = list(df_title["vote_count"])[0]
         if(cant_votos<2000): 
-            return print(f"Lo siento, {titulo.title()} cuenta solo con {cant_votos}, debes elegir una pelicula con almenos 2000")
+            return f"Lo siento, {titulo.title()} cuenta solo con {cant_votos}, debes elegir una pelicula con almenos 2000"
         return f"""La película {titulo.title()} fue estrenada en el año {int(list(df_title["release_year"])[0])} La misma cuenta con un total de {cant_votos} valoraciones, con un promedio de {list(df_title["vote_average"])[0]}"""
     except:
         f"La pelicula {titulo} no se encuentra en la base de datos"
@@ -113,10 +117,11 @@ def get_actor(nombre:str):
 
 
 # Certificamps que todos los datos de la columna tengan datos
-movies_merged_copy["director_names"].fillna("Unknown",inplace=True)
+
 
 @app.post("/get_director")
 def get_director(nombre):
+    movies_merged_copy["director_names"].fillna("Unknown",inplace=True)
     nombre = nombre.title()
     peliculas_return = {}
     cuenta_dinero_total = 0
@@ -136,8 +141,7 @@ def get_director(nombre):
                                                 "costo":budget,
                                                 "revenue":revenue}
                 cuenta_dinero_total += movies_merged_copy["return"].iloc[i]
-        print(peliculas_return)
-        
+            else: return f"{nombre} no se encuentra en la base de datos"
         return f"El director {nombre} consiguio un total de {round(cuenta_dinero_total,2)} mil dolares",peliculas_return
     except:
         return f"{nombre} no se encuentra en la base de datos"
@@ -190,19 +194,19 @@ indices = pd.Series(rec_system_copy.index, index=rec_system_copy["title"]).drop_
 @app.post("/recomendacion")
 def recomendacion(movie:str):
     movie = movie.lower()
+    num=5
     try:
         index = indices[movie]
         sim_scores=list(enumerate(cosine_sim[index]))
         distances = sorted(sim_scores,reverse= True,key=lambda x: x[1])
         lista=[]
-        for i in distances[1:6]:
+        for i in distances[1:num+1]:
             # print(i[0])
             titulo = rec_system_copy.iloc[i[0]].title
             lista.append(titulo.title())
-
         return lista
     except: 
-        f"La pelicula {movie} no se encuentra en la base de datos"
+        return f"La pelicula {movie} no se encuentra en la base de datos"
 
 
     
