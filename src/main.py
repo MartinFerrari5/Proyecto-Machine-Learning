@@ -76,10 +76,9 @@ def score_titulo (titulo:str):
     try:
         df_title = movies_merged_copy[movies_merged_copy["title"]==titulo]
         popularity = list(df_title["vote_average"])[0]
-        print(df_title)
         return f"""La película {titulo.title()} fue estrenada en el año {int(list(df_title["release_year"])[0])} cuenta con una score de {popularity}/10"""
     except:
-        return f"La pelicuoa {titulo} no se encuentra en la base de datos"
+        return f"La pelicula {titulo} no se encuentra en la base de datos"
 
 
 # Valoracion de la pelicula
@@ -141,7 +140,6 @@ def get_director(nombre):
                                                 "costo":budget,
                                                 "revenue":revenue}
                 cuenta_dinero_total += movies_merged_copy["return"].iloc[i]
-            else: return f"{nombre} no se encuentra en la base de datos"
         return f"El director {nombre} consiguio un total de {round(cuenta_dinero_total,2)} mil dolares",peliculas_return
     except:
         return f"{nombre} no se encuentra en la base de datos"
