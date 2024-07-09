@@ -6,12 +6,9 @@
 2. [Requisitos](#requisitos)
 3. [Estructura del Proyecto](#estructura-del-proyecto)
 4. [Instrucciones de Ejecucion](#instrucciones-de-ejecucion)
-5. [Datos y Fuentes](#datos-y-fuentes)
-6. [Metodología](#metodología)
-7. [Resultados y Conclusiones](#resultados-y-conclusiones)
-8. [Contribución y Colaboración](#contribución-y-colaboración)
-9. [Datasets](#licencia)
-10. [Autor](#autor) 
+5. [Conclusiones](#resultados-y-conclusiones)
+6. [Datasets](#licencia)
+7. [Autor](#autor) 
 
 
 ### Introduccion 
@@ -70,6 +67,12 @@ uvicorn main:app --reload
 
 ```
 5) <p>Una vez la <i>API</i> este corriendo, ingresa a la url que FastAPI te provee, y pruebala &#128513;</p>
+
+
+### Conclusiones
+<hr>
+
+* Se pudo observar que gran cantidad de los datos estaban vacios y otro porcentaje presentaba estructuras complejas. Si bien esto no imposibilita el trabajo, es de suma importancia entender y apuntar a una mejora en la <b>Calidad de los Datos</b> ya que asi, se trabaja mejor, aumenta la deteccion de patrones y tendencias y se puede ofrecer un mejor servicio, ayudando a una empresa a poder mejorarse cada dia.
 
 ### Datasets
 <hr>

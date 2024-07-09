@@ -8,7 +8,6 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity,linear_kernel
 
 
-
 #Inicializamos la app
 app = FastAPI()
 
@@ -17,6 +16,13 @@ app = FastAPI()
 movies_merged = pd.read_parquet("../datasets/movies_merged.parquet").head(5000)
 movies_merged_copy = movies_merged.copy()
 
+""" 
+
+FUNCION QUE RETORNA LA CANTIDAD DE PELICULAS POR MES
+
+ """
+
+# Mappeo de los meses con sus respectivos indices
 month_map={
     "Enero":1,
     "Febrero":2,
@@ -33,6 +39,7 @@ month_map={
 }
 
 # Cantidad de peliculas por mes
+
 @app.post("/cantidad_filmaciones_mes")
 def cantidad_filmaciones_mes(mes:str):
     mes = mes.capitalize()
@@ -45,7 +52,15 @@ def cantidad_filmaciones_mes(mes:str):
         return {"error": "Check your input"}
     #     print("Check your input")
 
-# Cantidad peliculas por dias
+
+""" 
+
+FUNCION QUE RETORNA LA CANTIDAD DE PELICULAS POR DIA
+
+"""
+
+
+# Mappeo de los dias con sus respectivos indices
 dias={
     "Lunes":0,
     "Martes":1,
@@ -56,6 +71,7 @@ dias={
     "Domingo":6
 
 }
+# Cantidad peliculas por dias
 
 @app.post("/cantidad_filmaciones_dia")
 def cantidad_filmaciones_dia(dia):
@@ -69,6 +85,12 @@ def cantidad_filmaciones_dia(dia):
         return "Check your input"
         
 
+""" 
+
+FUNCION QUE RETORNA LA PELICULA, SU AÑO DE LANZAMIENTO Y SU POPULARIDAD
+
+"""
+
 #Popularidad de la pelicula
 @app.post("/score_titulo")
 def score_titulo (titulo:str):
@@ -79,6 +101,13 @@ def score_titulo (titulo:str):
         return f"""La película {titulo.title()} fue estrenada en el año {int(list(df_title["release_year"])[0])} cuenta con una score de {popularity}/10"""
     except:
         return f"La pelicula {titulo} no se encuentra en la base de datos"
+
+
+""" 
+
+FUNCION QUE RETORNA LA PELICULA, SU AÑO DE LANZAMIENTO, LA CANTIDAD DE VOTOS EL VALOR PROMEDIO DE LOS MISMOS
+
+"""
 
 
 # Valoracion de la pelicula
@@ -97,6 +126,13 @@ def votos_titulo (titulo:str):
         f"La pelicula {titulo} no se encuentra en la base de datos"
     
 
+
+""" 
+
+FUNCION QUE RETORNA EL ACTOR, EN CUANTAS PELICULAS PARTICIPO, EL DINERO RECAUDADO POR TODAS LAS PELICULAS Y EL DINERO PROMEDIO QUE GANO
+
+"""
+
 @app.post("/get_actor")
 def get_actor(nombre:str):
     nombre = nombre.title()
@@ -114,6 +150,12 @@ def get_actor(nombre:str):
         return f"{nombre} no se encuentra en la base de datos"
     
 
+
+""" 
+
+FUNCION QUE RETORNA EL DIRECTOR, EL DINERO RECAUDADO POR TODAS LAS PELICULAS Y UNA PEQUEÑA DESCRIPCION DE LAS PELICULAS QUE REALIZO
+
+"""
 
 # Certificamps que todos los datos de la columna tengan datos
 
@@ -145,6 +187,11 @@ def get_director(nombre):
         return f"{nombre} no se encuentra en la base de datos"
 
 
+""" 
+
+SISTEMA DE RECOMENDACION
+
+"""
 
 # Sistema de recomendacion
 
