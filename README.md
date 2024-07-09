@@ -35,6 +35,9 @@
 `data/`: Esta carpeta contiene los datasets utilizados. <br>
 `notebooks/`: Contiene los archivos `.ipynb` en los cuales se realizo el <i>ETL</i> y el <i>EDA</i>.<br>
 `src/`: Contiene los archivos necesarios para que la <i>API</i> funcione.<br>
+*   `main.py`: Instancia la API.
+*   `funciones.py`: Cuenta con todas las funciones presentes en la API.
+*   `modelo.py`: Alberga el modelo de machine learning utilizado para el sitema de recomendacion.
 `README.md`: Documentacion del presente proyecto.<br>
 
 
