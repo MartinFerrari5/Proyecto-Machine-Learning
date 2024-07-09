@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 # Lectura del Dataset
-movies_merged = pd.read_parquet("../datasets/movies_merged.parquet").head(5000) #Aumente el numero de registros a su gusto
+movies_merged = pd.read_parquet("../datasets/movies_merged.parquet").head(10000) #Aumente el numero de registros a su gusto
 movies_merged_copy = movies_merged.copy()
 
 """ 

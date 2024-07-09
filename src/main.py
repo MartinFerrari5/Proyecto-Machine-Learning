@@ -11,9 +11,6 @@ app = FastAPI()
 def cantidad_filmaciones_mes(mes):
     return cant_film_mes(mes)
 
-
- 
-
 #FUNCION QUE RETORNA LA CANTIDAD DE PELICULAS POR DIA
 
 
@@ -34,9 +31,6 @@ def score_titulo(titulo):
 
 #FUNCION QUE RETORNA LA PELICULA, SU AÑO DE LANZAMIENTO, LA CANTIDAD DE VOTOS EL VALOR PROMEDIO DE LOS MISMOS
 
-
-
-
 # Valoracion de la pelicula
 @app.post("/votos_titulo")
 def votos_titulo(titulo):
@@ -51,7 +45,6 @@ def get_actor(actor):
     return actor_name(actor)
     
 
-
 # FUNCION QUE RETORNA EL DIRECTOR, EL DINERO RECAUDADO POR TODAS LAS PELICULAS Y UNA PEQUEÑA DESCRIPCION DE LAS PELICULAS QUE REALIZO
 
 @app.post("/get_director")
@@ -59,11 +52,6 @@ def get_director(director):
     return director_name(director)
 
 
-
-
 @app.post("/recomendacion")
 def recomendacion(titulo):
     return modelo_recomendacion(titulo)
-
-
-    
