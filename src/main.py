@@ -13,7 +13,7 @@ app = FastAPI()
 
 # Lectura del DataFrame
 
-movies_merged = pd.read_parquet("../datasets/movies_merged.parquet").head(5000)
+movies_merged = pd.read_parquet("../datasets/movies_merged.parquet").head(5000) #Aumente el numero de registros a su gusto
 movies_merged_copy = movies_merged.copy()
 
 """ 
@@ -195,14 +195,13 @@ SISTEMA DE RECOMENDACION
 
 # Sistema de recomendacion
 
-rec_system = pd.read_parquet("../datasets/rec_system.parquet").head(3000)
+rec_system = pd.read_parquet("../datasets/rec_system.parquet").head(3000) #Aumente el numero de registros a su gusto
 rec_system_copy = rec_system.copy()
 
 # Rellenamos los posibles valores nulos
 rec_system_copy.fillna({"overview":"[Unknown]",
                    "name_genre":"[Unknown]",
-                   "tagline":"[Unknown]",
-                   "company":"[Unknown]",
+                   "tagline":"[Unknown]"
                    },inplace=True)
 
 
