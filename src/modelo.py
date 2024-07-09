@@ -12,7 +12,7 @@ SISTEMA DE RECOMENDACION
 
 # Sistema de recomendacion
 
-rec_system = pd.read_parquet("../datasets/rec_system.parquet").head(10000) #Aumente el numero de registros a su gusto
+rec_system = pd.read_parquet("../datasets/rec_system.parquet").head(3000) #Aumente el numero de registros a su gusto
 rec_system_copy = rec_system.copy()
 
 # Rellenamos los posibles valores nulos
