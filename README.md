@@ -1,6 +1,7 @@
 # <div style="text-align:center">PROYECTO INDIVIDUAL N°1 MACHINE LEARNING OPERATIONS
 <p style="text-align:center"><img  src="https://th.bing.com/th/id/OIP.9omCDNmaGGrzBwJoTYs25wAAAA?rs=1&pid=ImgDetMain"> </p>
 </div>
+
 <HR>
 
 ## Tabla de contenido

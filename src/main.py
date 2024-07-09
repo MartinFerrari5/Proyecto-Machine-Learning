@@ -201,8 +201,6 @@ rec_system_copy = rec_system.copy()
 # Rellenamos los posibles valores nulos
 rec_system_copy.fillna({"overview":"[Unknown]",
                    "name_genre":"[Unknown]",
-                   "actors_names":"[Unknown]",
-                   "director_names":"[Unknown]",
                    "tagline":"[Unknown]",
                    "company":"[Unknown]",
                    },inplace=True)
