@@ -120,7 +120,7 @@ def votos_titulo (titulo:str):
             return f"La pelicula {titulo} no se encuentra en la base de datos"
         cant_votos = list(df_title["vote_count"])[0]
         if(cant_votos<2000): 
-            return f"Lo siento, {titulo.title()} cuenta solo con {cant_votos}, debes elegir una pelicula con almenos 2000"
+            return f"Lo siento, {titulo.title()} cuenta solo con {cant_votos} valoraciones, debes elegir una pelicula con almenos 2000"
         return f"""La película {titulo.title()} fue estrenada en el año {int(list(df_title["release_year"])[0])} La misma cuenta con un total de {cant_votos} valoraciones, con un promedio de {list(df_title["vote_average"])[0]}"""
     except:
         f"La pelicula {titulo} no se encuentra en la base de datos"
@@ -224,7 +224,7 @@ rec_system_copy["name_genre"] = rec_system_copy["name_genre"].apply(lambda x: ",
 rec_system_copy["tags"] =  rec_system_copy["name_genre"]  + " " + rec_system_copy["title"] + " " + str(rec_system_copy["vote_average"]) + " "       #+ rec_system_copy["actors_names"] + rec_system_copy["director_names"]  
 
 
-rec_system_copy["tags"] = rec_system_copy["tags"].apply(lambda x: "".join(x))
+rec_system_copy["tags"] = rec_system_copy["tags"].apply(lambda x: "".join(x.replace(","," ")))
 
 tv = TfidfVectorizer(max_features=5000, stop_words="english")
 vector = tv.fit_transform(rec_system_copy["tags"]).toarray()
