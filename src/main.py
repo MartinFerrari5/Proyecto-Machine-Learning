@@ -198,6 +198,7 @@ SISTEMA DE RECOMENDACION
 rec_system = pd.read_parquet("../datasets/rec_system.parquet").head(3000)
 rec_system_copy = rec_system.copy()
 
+# Rellenamos los posibles valores nulos
 rec_system_copy.fillna({"overview":"[Unknown]",
                    "name_genre":"[Unknown]",
                    "actors_names":"[Unknown]",
@@ -207,25 +208,21 @@ rec_system_copy.fillna({"overview":"[Unknown]",
                    },inplace=True)
 
 
-# rec_system_copy["overview"] = rec_system_copy["overview"].apply(lambda x: x.split())
-# rec_system_copy["tagline"] = rec_system_copy["tagline"].apply(lambda x: x.split())
-
+# Transformar a lista los valores que parquet reconoce como datos de tipo ndarray
 def collapse(valor):
     valores =[]
     for i in valor:
        valores.append(i)
     return valores
 
-
-rec_system_copy["company"]=rec_system_copy["company"].apply(collapse)
 rec_system_copy["name_genre"]=rec_system_copy["name_genre"].apply(collapse)
-# rec_system_copy["actors_names"]=rec_system_copy["actors_names"].apply(collapse)
-# rec_system_copy["director_names"]=rec_system_copy["director_names"].apply(collapse)
 
+#Transformamos en string la columna de genero
 rec_system_copy["name_genre"] = rec_system_copy["name_genre"].apply(lambda x: ",".join(x))
-rec_system_copy["company"] = rec_system_copy["company"].apply(lambda x: ",".join(x))
 
-rec_system_copy["tags"] =  rec_system_copy["name_genre"]  + " " + rec_system_copy["tagline"] + rec_system_copy["company"] + " " + rec_system_copy["collection"]       #+ rec_system_copy["actors_names"] + rec_system_copy["director_names"]  
+#Unimos todo en una columna
+rec_system_copy["tags"] =  rec_system_copy["name_genre"]  + " " + rec_system_copy["title"] + " " + str(rec_system_copy["vote_average"]) + " "       #+ rec_system_copy["actors_names"] + rec_system_copy["director_names"]  
+
 
 rec_system_copy["tags"] = rec_system_copy["tags"].apply(lambda x: "".join(x))
 
