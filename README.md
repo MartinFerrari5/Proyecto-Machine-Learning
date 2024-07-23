@@ -1,5 +1,5 @@
 # <div style="text-align:center">INDIVIDUAL PROJECT N°1 MACHINE LEARNING OPERATIONS
-<p style="text-align:center"><img  src="https://th.bing.com/th/id/OIP.9omCDNmaGGrzBwJoTYs25wAAAA?rs=1&pid=ImgDetMain"> </p>
+<p align="center"><img  src="https://th.bing.com/th/id/OIP.9omCDNmaGGrzBwJoTYs25wAAAA?rs=1&pid=ImgDetMain"> </p>
 
 
 ## Content Table
