@@ -1,11 +1,6 @@
-<<<<<<< HEAD
 # <div style="text-align:center">INDIVIDUAL PROJECT N°1 MACHINE LEARNING OPERATIONS
 <p style="text-align:center"><img  src="https://th.bing.com/th/id/OIP.9omCDNmaGGrzBwJoTYs25wAAAA?rs=1&pid=ImgDetMain"> </p>
-=======
-# <div style="text-align:center">PROYECTO INDIVIDUAL N°1 MACHINE LEARNING OPERATIONS
-<p align="center"><img  src="https://th.bing.com/th/id/OIP.9omCDNmaGGrzBwJoTYs25wAAAA?rs=1&pid=ImgDetMain"> </p>
->>>>>>> cbb0425966a3dd0e77e7f85d301c27bf492979fa
-</div>
+
 
 ## Content Table
 1. [Introduction](#introduction)
