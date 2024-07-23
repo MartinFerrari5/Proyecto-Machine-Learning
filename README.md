@@ -1,94 +1,103 @@
-# <div style="text-align:center">PROYECTO INDIVIDUAL N°1 MACHINE LEARNING OPERATIONS
+# <div style="text-align:center">INDIVIDUAL PROJECT N°1 MACHINE LEARNING OPERATIONS
 <p style="text-align:center"><img  src="https://th.bing.com/th/id/OIP.9omCDNmaGGrzBwJoTYs25wAAAA?rs=1&pid=ImgDetMain"> </p>
 </div>
 
-<HR>
-
-## Tabla de contenido
-1. [Introducción](#introducción)
-2. [Requisitos](#requisitos)
-3. [Estructura del Proyecto](#estructura-del-proyecto)
-4. [Instrucciones de Ejecucion](#instrucciones-de-ejecucion)
-5. [Conclusiones](#resultados-y-conclusiones)
+## Content Table
+1. [Introduction](#introduction)
+2. [Requirements](#requirements)
+3. [Project Structure](#proyect-structure)
+4. [Execution Instructions](#execution-instructions)
+5. [Conclusions](#conclusions)
 6. [Datasets](#licencia)
-7. [Autor](#autor) 
+7. [Author](#author) 
 
 
-### Introduccion 
-<HR>
+## Introduction
 
-<p style="border-left:5px solid rgba(150, 150, 105, 0.1);padding:5px;font-size:15px">Bienvenidos a todos a mi primer proyecto de machine learning. En esta oportunidad, el objetivo es crear una <i>API</i> con ciertas funciones que den respuesta a ciertos inputs del usuario. Un ejemplo: la cantidad de peliculas realizadas en un mes en especifico. Durante este proceso se ha realizado un ETL para asi poder trabajar con datos limpios y luego se realizo un EDA para poder analizar en profundidad el comportamiento de nuestro dataset. Luego, se construyo el sistema de recomendacion utilizando machine learning </p>
+Welcome to my first machine learning project! In this opportunity, we worked with movies datasets and  the goal is to create an API with certain functions that respond to specific user inputs. For example, the API could provide the number of movies released in a particular month. During this process, an ETL (Extract, Transform, Load) pipeline was implemented to work with clean data, followed by an Exploratory Data Analysis (EDA) to thoroughly examine the dataset's behavior. Finally, a recommendation system was built using machine learning.
 
-### Requisitos
-<hr>
-<p>Para el entendimiento y ejecucion del siguiente proceso se require conocimiento en las siguientes areas:</p>
+## Requirements
 
-1) Python
-2) Pandas
-3) Numpy
-4) Scikit-Learn
+To understand and execute this project, knowledge in the following areas is required:
+
+1) ***Python***
+2) ***Pandas***
+3) ***NumPy***
+4) ***Scikit-Learn***
+5) ***Project Structure***
+
+## Project Structure
+
+`data/`: This folder contains the datasets used.
+
+``notebooks/``: Contains the ``.ipynb`` files where the ETL and EDA were performed.
+
+``src/``: Contains the files necessary for the API to function.
+
+``main.py``: Instantiates the API.
+
+``funciones.py``: Contains all the functions present in the API.
+
+``modelo.py``: Contains the machine learning model used for the recommendation system.
+
+``README.md``: Documentation for this project.
 
 
-### Estructura del proyecto:
-<hr>
+# Execution Instructions
 
-`data/`: Esta carpeta contiene los datasets utilizados. <br>
-`notebooks/`: Contiene los archivos `.ipynb` en los cuales se realizo el <i>ETL</i> y el <i>EDA</i>.<br>
-`src/`: Contiene los archivos necesarios para que la <i>API</i> funcione.<br>
-*   `main.py`: Instancia la API.
-*   `funciones.py`: Cuenta con todas las funciones presentes en la API.
-*   `modelo.py`: Alberga el modelo de machine learning utilizado para el sistema de recomendacion.
-
-`README.md`: Documentacion del presente proyecto.<br>
-
-
-
-### Instrucciones de Ejecucion
-<hr>
-
-1) Como primera instancia se clonara el repositorio.
+1) Clone the repository:
 ```
 git clone https://github.com/MartinFerrari5/first_project.git
 ```
-- Como recomendacion, utiliza un entorno virtual:
+
+- It is recommended to use a virtual environment:
+# Create virtual environment
 ```
-#Creacion entorno virtual
-    python -m venv nombre-entorno
+python -m venv environment_name
 ```
-* Activacion:
-    - Windows: `venv\Scripts\activate`
-    - Mac/Linux: `venv/bin/activate`
 
-2) Dirigite a la carpeta de `/notebooks` donde encontraras el archivo `etl.ipynb`, dentro de este, encontraras todo el proceso de limpieza y tranformacion realizado a los dataset en su formato original. Al final del presente <b>README</b> se encuentra el link para que los puedas descargar.
+- Activate:
+``Windows``: venv\Scripts\activate
 
-3) Una vez ejecutado el paso n°2, dirigete al archivo `eda.ipynb` en el cual encontraras el analisis exploratorio de los datos. Se presenta un estudio con graficos de los datos ya limpios
+``Mac/Linux``: venv/bin/activate
 
-4) Haciendo uso de la terminal que gustes, inicia la <i>API</i>.
+2) Download libraries.
+```
+python -m pip install -r requirements.txt
+```
+3) Navigate to the /notebooks folder where you will find the ``etl.ipynb`` file. Inside, you will find the entire cleaning and transformation process applied to the datasets in their original format. The link to download these datasets is provided at the end of this ``README``.
+
+Once step 3 has been executed, proceed to the ``eda.ipynb`` file where you will find the exploratory data analysis. A study with graphs of the cleaned data is presented.
+
+4) Using the terminal of your choice, start the API:
 
 ```
-# Dirigete a la carpeta src 
+# Navigate to the src folder
 cd src
 
-# Corre el siguiente codigo
+# Run the following code
 uvicorn main:app --reload
-
 ```
-5) <p>Una vez la <i>API</i> este corriendo, ingresa a la url que FastAPI te provee, y pruebala &#128513;</p>
+
+5) <p> Once the API is running, access the URL provided by FastAPI and try it out! &#128513;</p>
+
+## Conclusions
+
+It was observed that a significant amount of data was empty, and another percentage presented complex structures. While this does not make the work impossible, it is of significal importance to understand and aim for an improvement in Data Quality. This will allow a better work, increase pattern and trend detection, and the ability to offer a better service, helping the company to improve every day.
+
+## Datasets
+
+Due to their significant size, the datasets used in .csv format can be downloaded from the following link:
+
+<b><a href="https://drive.google.com/drive/u/0/folders/1VuwQ5M1JQ_VugOIa7mo8ET66eOhLpjsQ">Datasets Link</a></b>
+
+## Author
+
+This project was carried out by Martin Ferrari. Thank you all for reading, feel free to contact me on my <a href="https://www.linkedin.com/in/martin-ferrari-bb0547219/">LinkedIn</a> for any questions.
 
 
-### Conclusiones
-<hr>
 
-* Se pudo observar que gran cantidad de los datos estaban vacios y otro porcentaje presentaba estructuras complejas. Si bien esto no imposibilita el trabajo, es de suma importancia entender y apuntar a una mejora en la <b>Calidad de los Datos</b> ya que asi, se trabaja mejor, aumenta la deteccion de patrones y tendencias y se puede ofrecer un mejor servicio, ayudando a una empresa a poder mejorarse cada dia.
 
-### Datasets
-<hr>
 
-Al contar con un peso significante, los datasets utilizados en formato `.csv` se encuentran en el siguiente link para su descarga. <b><a href="https://drive.google.com/drive/u/0/folders/1VuwQ5M1JQ_VugOIa7mo8ET66eOhLpjsQ">Link Datasets</a></b>
-
-### Autor
-<hr>
-
-Este proyecto fue realizado por Martin Ferrari. Muchas gracias a todos por leer, no dudes en contactarme a mi <a href="https://www.linkedin.com/in/martin-ferrari-bb0547219/">LinkedIn</a> por cualquier duda
 
 
